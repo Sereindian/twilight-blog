@@ -44,7 +44,7 @@ site:
         # 主题色的默认色相 (范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345)
         hue: 255
     # 默认主题 ("system" 跟随系统 | "light" 浅色 | "dark" 深色)
-    defaultTheme: "dark"
+    defaultTheme: "light"
     # 壁纸配置
     wallpaper:
         # 模式 ("banner" 横幅 | "fullscreen" 全屏 | "none" 纯色)
@@ -176,29 +176,15 @@ navbar:
             "Home"
         - # 一级导航链接 - 归档 (预设)
             "Archive"
-        - # 一级导航链接 - 展览 (自定义)
+        - # 一级导航链接 - 网页推荐 (自定义)
             # 导航名称
-            name: "展览"
+            name: "网页推荐"
             # 导航链接
-            url: "/exhibition/"
+            url: "/recommendations/"
             # 导航图标
-            icon: "material-symbols:person"
+            icon: "material-symbols:language"
             # 导航描述
-            description: "我的创作与经历"
-            # 子链接
-            children:
-                - # 二级导航链接 - 项目 (预设)
-                    "Projects"
-                - # 二级导航链接 - 技能 (预设)
-                    "Skills"
-                - # 二级导航链接 - 历程 (预设)
-                    "Timeline"
-                - # 二级导航链接 - 日记 (预设)
-                    "Diary"
-                - # 二级导航链接 - 相册 (预设)
-                    "Albums"
-                - # 二级导航链接 - 动画 (预设)
-                    "Anime"
+            description: "实用工具、学习资料与有趣的网站"
         - # 一级导航链接 - 好友 (预设)
             "Friends"
         - # 一级导航链接 - 关于 (预设)
@@ -210,11 +196,23 @@ sidebar:
     components:
         # 左侧侧边栏
         left:
+            - # 组件 - 资料：头像置于左侧顶部
+                type: "profile"
+                position: "top"
+            - # 组件 - 公告
+                type: "announcement"
+                position: "top"
+            - # 组件 - 日历
+                type: "calendar"
+                position: "top"
             - # 组件 - 目录 (预设)
                 # 类型
                 type: "directory"
                 # 位置策略 ("top" 顶部固定 | "sticky" 粘性)
                 position: "sticky"
+                visibility:
+                    mode: "include"
+                    paths: ["^/posts/", "^/albums"]
             - # 组件 - 文章类别 (预设)
                 # 类型
                 type: "categories"
@@ -237,28 +235,6 @@ sidebar:
                     collapseThreshold: 20
         # 右侧侧边栏
         right:
-            - # 组件 - 资料 (预设)
-                # 类型
-                type: "profile"
-                # 位置策略 ("top" 顶部固定 | "sticky" 粘性)
-                position: "top"
-                # 页面可见性配置
-                visibility:
-                    # 匹配模式：'include' (包含), 'exclude' (排除)
-                    mode: "exclude"
-                    # 页面路径匹配规则列表 (支持正则字符串)
-                    paths: ["^/posts/", "^/archive"]
-            - # 组件 - 公告 (预设)
-                # 类型
-                type: "announcement"
-                # 位置策略 ("top" 顶部固定 | "sticky" 粘性)
-                position: "top"
-                # 页面可见性配置
-                visibility:
-                    # 匹配模式：'include' (包含), 'exclude' (排除)
-                    mode: "exclude"
-                    # 页面路径匹配规则列表 (支持正则字符串)
-                    paths: ["^/posts/", "^/archive"]
             - # 组件 - 文章目录 (预设)
                 # 类型
                 type: "toc"
@@ -299,9 +275,9 @@ profile:
 # 公告配置
 announcement:
     # 公告标题
-    title: "Announcement"
+    title: "小站公告"
     # 公告内容
-    content: "Welcome to my blog!"
+    content: "欢迎来到 Sereindian 的小站。这里记录学习与生活，也分享实用工具和有趣的网站。"
     # 允许用户关闭公告
     closable: true
     # 链接配置
@@ -309,9 +285,9 @@ announcement:
         # 启用链接
         enable: true
         # 链接文本
-        text: "Learn More"
+        text: "逛逛网页推荐"
         # 链接 URL
-        url: "/about/"
+        url: "/recommendations/"
         # 是否外部链接
         external: false
 
@@ -322,13 +298,13 @@ post:
         # 封面
         cover:
             # 位置 ("left" | "right")
-            side: "left"
+            side: "right"
             # 封面宽度
             width: "33%"
             # 封面上是否显示文字 (标题、标签、摘要)
-            showContent: true
+            showContent: false
             # 无指定封面时是否显示默认封面
-            showDefaultCover: true
+            showDefaultCover: false
         # 标题大小 (Tailwind 文本大小类，例如 "text-3xl")
         titleSize: "text-2xl"
     # 显示"上次编辑"卡片

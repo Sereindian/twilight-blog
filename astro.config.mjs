@@ -56,6 +56,9 @@ export default defineConfig({
     site: siteConfig.siteURL,
     base: "/",
     trailingSlash: "always",
+    redirects: {
+        "/exhibition/": "/recommendations/",
+    },
     adapter: adapter,
     integrations: [
         decapCmsOauth({

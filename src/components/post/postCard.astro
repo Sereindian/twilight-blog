@@ -54,13 +54,13 @@ const imageBaseDir = getFileDirFromPath(entry.filePath || "");
 const defaultCoverGradient = "linear-gradient(135deg, color-mix(in oklch, oklch(from var(--primary) l c calc(h - 30)) 51%, transparent) 0%, color-mix(in oklch, var(--primary) 51%, transparent) 50%, color-mix(in oklch, oklch(from var(--primary) l c calc(h + 30)) 51%, transparent) 100%)";
 ---
 
-<div class:list={["card-base flex flex-col-reverse @min-[768px]:flex-col w-full rounded-(--radius-large) overflow-hidden relative @container", className]} style={style}>
-    <div class:list={["pl-6 @min-[768px]:pl-9 pr-6 @min-[768px]:pr-2 pt-6 @min-[768px]:pt-7 pb-6 relative", 
-        {"w-full @min-[768px]:w-[calc(100%-var(--coverWidth)-var(--coverGap))]": isCoverOnRight && renderCoverArea,
-         "ml-0 @min-[768px]:ml-[calc(var(--coverWidth)+var(--coverGap))]": !isCoverOnRight && renderCoverArea}
+<div class:list={["card-base flex flex-col-reverse @min-[512px]:flex-col w-full rounded-(--radius-large) overflow-hidden relative @container", className]} style={style}>
+    <div class:list={["pl-6 @min-[512px]:pl-9 pr-6 @min-[512px]:pr-2 pt-6 @min-[512px]:pt-7 pb-6 relative",
+        {"w-full @min-[512px]:w-[calc(100%-var(--coverWidth)-var(--coverGap))]": isCoverOnRight && renderCoverArea,
+         "ml-0 @min-[512px]:ml-[calc(var(--coverWidth)+var(--coverGap))]": !isCoverOnRight && renderCoverArea}
     ]}>
         <a href={url}
-            class:list={["transition group w-full block font-bold mb-3 text-90 hover:text-(--primary) dark:hover:text-(--primary) active:text-(--title-active) dark:active:text-(--title-active) before:w-1 before:h-5 before:rounded-md before:bg-(--primary) before:absolute before:top-[35px] before:left-[18px] before:hidden @min-[768px]:before:block",
+            class:list={["transition group w-full block font-bold mb-3 text-90 hover:text-(--primary) dark:hover:text-(--primary) active:text-(--title-active) dark:active:text-(--title-active) before:w-1 before:h-5 before:rounded-md before:bg-(--primary) before:absolute before:top-[35px] before:left-[18px] before:hidden @min-[512px]:before:block",
                 titleSize
             ]}
         >
@@ -70,7 +70,7 @@ const defaultCoverGradient = "linear-gradient(135deg, color-mix(in oklch, oklch(
         <!-- metadata -->
         <PostMetadata published={published!} updated={updated} tags={tags} category={category || undefined} hideTagsForMobile={true} hideUpdateDate={true} postUrl={url} className="mb-4"></PostMetadata>
         <!-- description -->
-        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 @min-[768px]:line-clamp-1": !description}]}>
+        <div class:list={["transition text-75 mb-3.5 pr-4", {"line-clamp-2 @min-[512px]:line-clamp-1": !description}]}>
             { description || remarkPluginFrontmatter.excerpt }
         </div>
         <!-- word count and read time  -->
@@ -87,9 +87,9 @@ const defaultCoverGradient = "linear-gradient(135deg, color-mix(in oklch, oklch(
 
     {renderCoverArea && (
         <a href={url} aria-label={title} class:list={["group",
-                "max-h-[20vh] h-[20vh] @min-[768px]:max-h-none @min-[768px]:h-auto mx-4 mt-4 -mb-2 @min-[768px]:mb-0 @min-[768px]:mx-0 @min-[768px]:mt-0",
-                "@min-[768px]:w-(--coverWidth) relative @min-[768px]:absolute @min-[768px]:top-(--coverMargin) @min-[768px]:bottom-(--coverMargin) rounded-xl overflow-hidden active:scale-95",
-                {"@min-[768px]:right-(--coverMargin)": isCoverOnRight, "@min-[768px]:left-(--coverMargin)": !isCoverOnRight}
+                "max-h-[20vh] h-[20vh] @min-[512px]:max-h-none @min-[512px]:h-auto mx-4 mt-4 -mb-2 @min-[512px]:mb-0 @min-[512px]:mx-0 @min-[512px]:mt-0",
+                "@min-[512px]:w-(--coverWidth) relative @min-[512px]:absolute @min-[512px]:top-(--coverMargin) @min-[512px]:bottom-(--coverMargin) rounded-xl overflow-hidden active:scale-95",
+                {"@min-[512px]:right-(--coverMargin)": isCoverOnRight, "@min-[512px]:left-(--coverMargin)": !isCoverOnRight}
             ]}
         >
             <div class="absolute pointer-events-none z-10 w-full h-full group-hover:bg-black/30 group-active:bg-black/50 transition"></div>
@@ -103,7 +103,7 @@ const defaultCoverGradient = "linear-gradient(135deg, color-mix(in oklch, oklch(
                     class="w-full h-full">
                 </ImageWrapper>
             ) : (
-                <div class="w-full h-full flex items-center justify-center p-4 @min-[768px]:p-6"
+                <div class="w-full h-full flex items-center justify-center p-4 @min-[512px]:p-6"
                     style={`background: ${defaultCoverGradient}`}>
                     {entry.data.encrypted ? (
                         <Icon name="mdi:lock" class="text-5xl text-white/81" />

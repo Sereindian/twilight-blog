@@ -1,0 +1,32 @@
+[
+    {
+        "id": "learning",
+        "name": "学习与开发",
+        "description": "查文档、学技术，从这些入口开始。",
+        "sites": [
+            { "name": "MDN Web Docs", "url": "https://developer.mozilla.org/zh-CN/", "description": "HTML、CSS、JavaScript 与 Web API 的参考文档和学习指南。" },
+            { "name": "Astro 中文文档", "url": "https://docs.astro.build/zh-cn/", "description": "从创建页面到内容管理，了解这个博客背后的框架。" },
+            { "name": "Cloudflare 文档", "url": "https://developers.cloudflare.com/", "description": "查阅 Pages、Workers、域名与网络服务的配置方法。" }
+        ]
+    },
+    {
+        "id": "tools",
+        "name": "实用工具",
+        "description": "打开浏览器就能用，处理图片和整理思路。",
+        "sites": [
+            { "name": "Squoosh", "url": "https://squoosh.app/", "description": "在线压缩和转换图片，对比画质，给博客封面瘦身。" },
+            { "name": "Excalidraw", "url": "https://excalidraw.com/", "description": "手绘风格的在线白板，用来画流程图、草图和学习笔记。" },
+            { "name": "Photopea", "url": "https://www.photopea.com/", "description": "浏览器里的图片编辑器，支持图层、蒙版和 PSD 文件。" }
+        ]
+    },
+    {
+        "id": "inspiration",
+        "name": "开源与灵感",
+        "description": "发现项目，也看看别人的小站。",
+        "sites": [
+            { "name": "GitHub", "url": "https://github.com/", "description": "发现开源项目、阅读源码，也可以在这里维护自己的博客。" },
+            { "name": "Astro 主题", "url": "https://astro.build/themes/", "description": "浏览博客与个人网站主题，寻找排版和设计灵感。" },
+            { "name": "云泽の小屋", "url": "https://zeyun.org/", "description": "分享技术实践与生活记录的个人博客，也是本站布局的参考。" }
+        ]
+    }
+]

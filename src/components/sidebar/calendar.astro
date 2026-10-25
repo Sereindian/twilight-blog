@@ -1,0 +1,79 @@
+---
+import { siteConfig } from "@/config";
+import WidgetLayout from "./widgetLayout.astro";
+
+interface Props {
+    side?: string;
+    class?: string;
+    style?: string;
+}
+const { side = "default", class: className, style } = Astro.props;
+const offset = siteConfig.timeZone;
+const now = new Date(Date.now() + offset * 3_600_000);
+const year = now.getUTCFullYear();
+const month = now.getUTCMonth();
+const day = now.getUTCDate();
+const start = (new Date(Date.UTC(year, month, 1)).getUTCDay() + 6) % 7;
+const count = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+---
+
+<WidgetLayout id={`calendar-${side}`} name="日历" class={className} style={style}>
+    <site-calendar data-offset={offset} class="text-75">
+        <p data-month class="calendar-month">{year} 年 {month + 1} 月</p>
+        <div class="calendar-grid calendar-week" aria-hidden="true">
+            {["一", "二", "三", "四", "五", "六", "日"].map(label => <span>{label}</span>)}
+        </div>
+        <div class="calendar-grid" data-days aria-label={`${year} 年 ${month + 1} 月日历`}>
+            {Array.from({ length: start }, () => <span aria-hidden="true"></span>)}
+            {Array.from({ length: count }, (_, i) => (
+                <span class:list={["calendar-day", { today: i + 1 === day }]}
+                    aria-current={i + 1 === day ? "date" : undefined}>{i + 1}</span>
+            ))}
+        </div>
+    </site-calendar>
+</WidgetLayout>
+
+<style>
+    site-calendar { display: block; }
+    .calendar-month { text-align: center; font-weight: 600; margin: 0.5rem 0 0.75rem; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.25rem; text-align: center; }
+    .calendar-week { color: var(--content-meta); font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .calendar-grid :global(.calendar-day) { display: grid; place-items: center; min-height: 1.75rem; font-size: 0.875rem; border-radius: 0.5rem; }
+    .calendar-grid :global(.today) { color: var(--btn-content); background: var(--btn-regular-bg); font-weight: 700; }
+</style>
+
+<script>
+    // Update in the browser so a static deployment always shows the current date.
+    class SiteCalendar extends HTMLElement {
+        connectedCallback() {
+            const date = new Date(Date.now() + Number(this.dataset.offset) * 3_600_000);
+            const year = date.getUTCFullYear();
+            const month = date.getUTCMonth();
+            const today = date.getUTCDate();
+            const start = (new Date(Date.UTC(year, month, 1)).getUTCDay() + 6) % 7;
+            const count = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+            const label = this.querySelector("[data-month]");
+            const days = this.querySelector("[data-days]");
+            if (!label || !days) return;
+            label.textContent = `${year} 年 ${month + 1} 月`;
+            days.setAttribute("aria-label", `${year} 年 ${month + 1} 月日历`);
+            const cells = Array.from({ length: start + count }, (_, i) => {
+                const cell = document.createElement("span");
+                if (i < start) {
+                    cell.setAttribute("aria-hidden", "true");
+                } else {
+                    const day = i - start + 1;
+                    cell.className = "calendar-day";
+                    cell.textContent = String(day);
+                    if (day === today) {
+                        cell.classList.add("today");
+                        cell.setAttribute("aria-current", "date");
+                    }
+                }
+                return cell;
+            });
+            days.replaceChildren(...cells);
+        }
+    }
+    if (!customElements.get("site-calendar")) customElements.define("site-calendar", SiteCalendar);
+</script>

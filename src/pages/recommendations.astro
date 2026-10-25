@@ -1,0 +1,89 @@
+---
+export const prerender = true;
+
+import groups from "@/content/recommendations.json";
+import GridLayout from "@layouts/grid.astro";
+import BackwardButton from "@components/backwardButton.astro";
+
+const title = "网页推荐";
+const description = "实用工具、学习资料与有趣的网站。";
+const headings = [
+    { depth: 1, slug: "recommendations-title", text: title },
+    ...groups.map(group => ({ depth: 2, slug: group.id, text: group.name })),
+];
+const total = groups.reduce((count, group) => count + group.sites.length, 0);
+---
+
+<GridLayout title={title} description={description} headings={headings}>
+    <div class="card-base recommendation-page" data-pagefind-body>
+        <BackwardButton currentPath={Astro.url.pathname} />
+        <header class="recommendation-header">
+            <h1 id="recommendations-title">{title}</h1>
+            <p>收集值得打开的网页，让好用的工具和有趣的内容更容易找到。</p>
+        </header>
+        <website-directory>
+            <div class="directory-search" data-search-controls hidden>
+                <label for="website-search">查找网站</label>
+                <input id="website-search" type="search" placeholder="输入名称、用途或关键词" autocomplete="off" />
+                <p class="search-count" role="status" aria-live="polite" data-count>共 {total} 个网站</p>
+            </div>
+            <nav class="directory-nav" aria-label="推荐分类">
+                {groups.map(group => <a href={`#${group.id}`}>{group.name}</a>)}
+            </nav>
+            {groups.map(group => (
+                <section class="recommendation-group" data-group aria-labelledby={group.id}>
+                    <h2 id={group.id}>{group.name}</h2>
+                    <p class="group-description">{group.description}</p>
+                    <div class="website-list">
+                        {group.sites.map(site => (
+                            <a class="website-link" href={site.url} target="_blank" rel="noopener noreferrer"
+                                data-website data-search={`${site.name} ${site.description} ${site.url} ${group.name}`.toLocaleLowerCase()}>
+                                <div class="website-copy">
+                                    <h3>{site.name}</h3>
+                                    <p>{site.description}</p>
+                                    <span class="website-host">{new URL(site.url).hostname}</span>
+                                </div>
+                                <span class="website-arrow" aria-hidden="true">↗</span>
+                                <span class="sr-only">（在新标签页打开）</span>
+                            </a>
+                        ))}
+                    </div>
+                </section>
+            ))}
+            <p class="empty-message" data-empty hidden>没有找到匹配的网站，试试其他关键词。</p>
+        </website-directory>
+    </div>
+</GridLayout>
+
+<style>
+    .recommendation-page { --directory-ink: #171717; --directory-body: #525252; padding: clamp(1.25rem, 4vw, 2.25rem); margin-bottom: 1rem; color: var(--directory-ink); }
+    :global(.dark) .recommendation-page { --directory-ink: #f5f5f5; --directory-body: #d4d4d4; }
+    .recommendation-header { margin: 1.5rem 0 2rem; }
+    h1 { font-size: 1.875rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.75rem; }
+    .recommendation-header p, .group-description { color: var(--content-meta); line-height: 1.75; }
+    website-directory { display: block; }
+    .directory-search { margin-bottom: 1rem; }
+    .directory-search label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+    input { width: 100%; min-height: 2.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; background: var(--btn-regular-bg); color: var(--directory-ink); font: inherit; }
+    input::placeholder { color: var(--content-meta); }
+    input:focus-visible, a:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+    .search-count { margin-top: 0.5rem; font-size: 0.875rem; color: var(--content-meta); }
+    .directory-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .directory-nav a { padding: 0.5rem 0.875rem; border-radius: 0.5rem; color: var(--btn-content); background: var(--btn-regular-bg); }
+    .directory-nav a:hover { background: var(--btn-regular-bg-hover); }
+    .recommendation-group { margin-top: 2rem; scroll-margin-top: 6rem; }
+    h2 { font-size: 1.375rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .group-description { margin-bottom: 1rem; }
+    .website-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .website-link { display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border-radius: 0.75rem; background: var(--btn-plain-bg-hover); transition: transform 180ms ease; }
+    .website-link:hover { transform: translateX(4px); }
+    .website-link:active { transform: translateX(2px); }
+    .website-copy { min-width: 0; flex: 1; }
+    h3 { font-size: 1.125rem; font-weight: 700; line-height: 1.5; }
+    .website-copy p { margin: 0.375rem 0; color: var(--directory-body); line-height: 1.75; }
+    .website-host { color: var(--content-meta); font-size: 0.875rem; overflow-wrap: anywhere; }
+    .website-arrow { color: var(--primary); font-size: 1.5rem; flex-shrink: 0; }
+    .empty-message { padding: 2rem 0; color: var(--content-meta); }
+    [hidden] { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { .website-link { transition: none; transform: none !important; } }
+</style>
