@@ -19,3 +19,11 @@
 推荐列表提供名称、说明、网址、分类关键词的即时筛选，支持无结果提示；禁用 JavaScript 时仍能浏览全部链接。
 
 提交到 `main` 后，现有 Cloudflare Pages Git 集成会自动构建部署。站点原有示例文章与关于页内容可后续自行替换。
+
+## GitHub Pages 构建源
+
+仓库使用 Astro。GitHub 仓库的 `Settings → Pages → Build and deployment → Source` 应选择 `GitHub Actions`，由已有 `.github/workflows/deploy.yml` 构建和发布。
+
+不要将 `main / (root)` 直接交给 Jekyll 构建；Jekyll 会把 `.astro` 文件中的代码误当成 YAML front matter，导致 `pages build and deployment` 报错。
+
+当前头像使用 `public/assets/images/EEDB3A0FE22E42DF15C35AB4FFEC399B.jpg`（上传的黄色花朵照片）。
