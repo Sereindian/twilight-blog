@@ -1,138 +1,212 @@
-<div align = "center">
+# 中文维护指南
 
-# Twilight
+[返回项目首页](../README.md) · [布局与配置索引](LAYOUT_ZH.md)
 
-一个支持后台管理的静态博客主题模板，基于 Astro 框架打造
+本文按本站当前源码整理，最后核对于 **2026 年 10 月 25 日**。主站地址为 [sereindian.xyz](https://sereindian.xyz/)。
 
-[**🖥️ 演示**](https://twilight.spr-aachen.com)
-[**📝 文档**](https://docs.twilight.spr-aachen.com)
+## 文章维护
 
-[![Bilibili](https://img.shields.io/badge/Bilibili-Intro-blue?logo=Bilibili)](https://space.bilibili.com/359461611/lists/6641229)&nbsp;
-[![YouTube](https://img.shields.io/badge/YouTube-Intro-red?logo=YouTube)](https://youtube.com/playlist?list=PLzjq8Hx1SRV7yqZQiACcCJmKPeg5D8JKe&si=Bcz2o0PF8MFvx8ec)
+### 新建文章
 
-<table style="width: 100%; table-layout: fixed;">
-   <tr>
-      <td colspan="5"><img alt="Desktop" src="https://docs.twilight.spr-aachen.com/preview/desktop.jpg" style="max-width: 100%;"></td>
-   </tr>
-   <tr>
-      <td><img alt="Mobile_4" src="https://docs.twilight.spr-aachen.com/preview/mobile_4.jpg" style="max-width: 100%;"></td>
-      <td><img alt="Mobile_2" src="https://docs.twilight.spr-aachen.com/preview/mobile_2.jpg" style="max-width: 100%;"></td>
-      <td><img alt="Mobile_1" src="https://docs.twilight.spr-aachen.com/preview/mobile_1.jpg" style="max-width: 100%;"></td>
-      <td><img alt="Mobile_3" src="https://docs.twilight.spr-aachen.com/preview/mobile_3.jpg" style="max-width: 100%;"></td>
-      <td><img alt="Mobile_5" src="https://docs.twilight.spr-aachen.com/preview/mobile_5.jpg" style="max-width: 100%;"></td>
-   </tr>
-</table>
+常用目录：
 
-</div>
+| 内容 | 文件夹 | `category` |
+| --- | --- | --- |
+| 开发过程与工具实践 | `src/content/posts/vibe/` | `Vibe Coding` |
+| 游戏攻略与记录 | `src/content/posts/game/` | `游戏` |
 
+本地可以运行：
+
+```bash
+pnpm new-post vibe/my-new-post
+pnpm new-post game/my-game-note
+```
+
+脚本会补上 `.md` 后缀，创建不存在的父目录，并拒绝覆盖已有同名文件。**它不会根据目录填写分类或标签，且默认 `draft: false`**，创建后需要编辑元数据。
+
+也可以在 GitHub 网页端新建对应路径的 Markdown 文件。已有文章使用文件页面的编辑按钮修改，完成后提交至 `main`。
+
+### 元数据示例
+
+```yaml
 ---
+title: "我的游戏记录"
+published: 2026-10-25
+updated: 2026-10-25
+description: "简要说明游戏、主题与这篇文章的内容。"
+category: "游戏"
+tags: ["游戏名称", "攻略"]
+author: "Sereindian"
+cover: "/assets/images/my-game-note.jpg"
+coverPosition: "center"
+coverInContent: false
+pinned: false
+draft: true
+lang: "zh_hans"
+---
+```
 
-<div align = "center">
+下方直接写正文。准备发布时，把 `draft` 改成 `false`。
 
-[**English**](../README.md) | 中文
+| 字段 | 实际作用 |
+| --- | --- |
+| `title` | 文章标题 |
+| `published` | 原始发布日期，参与首页排序、归档与发文统计 |
+| `updated` | 更新日期，适合修订或从其他平台同步旧文时填写 |
+| `description` | 首页文章摘要 |
+| `category` | 分类；当前预设为 Vibe Coding、游戏 |
+| `tags` | 标签数组，自动进入标签列表和统计 |
+| `cover` | 封面路径；为空时不展示封面区域 |
+| `coverPosition` | 列表封面的 CSS 裁切焦点，默认 `center` |
+| `coverInContent` | 是否将封面同时放在文章正文顶部 |
+| `pinned` | 是否置顶；置顶优先于日期排序 |
+| `draft` | `true` 时不进入生产发布；开发环境可读取草稿 |
+| `author` | 作者名称 |
+| `sourceLink` | 原始来源链接，适合转载或跨平台同步 |
+| `directoryTitle` | 右侧目录中单独使用的简短标题，未填时使用文章标题 |
+| `lang` | 文章语言，本站通常使用 `zh_hans` |
+| `licenseName`、`licenseUrl` | 可覆盖文章页面默认展示的许可名称与链接 |
 
-</div>
+建议显式填写 `published`。从 B 站等平台同步旧文时，保留原发布日期，用 `updated` 记录本次更新，并填写 `sourceLink`。
 
+文件夹与分类分别维护。例如 `posts/game/example.md` 会进入目录树的 `game` 文件夹，但仍需填写 `category: "游戏"`。通常对应链接为 `/posts/game/example/`。
 
-## ✨ 特性
+`draft: true` 用于控制站点发布；文章提交到公开仓库后，源文件仍可在 GitHub 查看。
 
-### 内容管理
-- **CMS 集成**: 基于无头 CMS 的便捷内容管理
-- **置顶与草稿**: 置顶重要文章，草稿隐藏于生产环境
-- **加密文章**: 支持 AES 密码加密的文章保护
-- **自动化导航**: 自动生成文章导航、归档和目录
-- **数据可视化**: 项目、技能、历程等个人数据展示
+### 图片与封面
 
-### 内容页面
-- **博客文章**: 完整的 Markdown 博客系统，支持标签和分类
-- **项目与技能展柜**: 可视化的个人作品集展示
-- **历程时间线**: 教育、工作、成就、技能等生平展示
-- **日记**: 短形式的社交风格随笔
-- **相册**: 图片画廊与 Fancybox 灯箱集成
-- **友情链接**: 带图标和描述的友链交换页面
-- **RSS 与 Atom**: 专用信息页与自动生成的 XML 订阅文件
+图片放在 `public/assets/images/`，页面中使用省略 `public` 的路径：
 
-### Markdown 增强
-- **GitHub 仓库卡片**: 通过 `::github{repo="..."}` 嵌入仓库信息
-- **音乐卡片**: 通过 `::music{...}` 嵌入内联播放器与歌词
-- **提示块**: 支持 Note、Tip、Warning、Caution 样式
-- **代码块增强**: 复制按钮、折叠、行号、语言标签
-- **Mermaid 图表**: 渲染 ` ```mermaid ` 代码块为图表
-- **KaTeX 数学公式**: 支持 `$...$` 和 `$$...$$` 公式渲染
+```markdown
+![图片说明](/assets/images/my-game-note.jpg)
+```
 
-### UI 组件
-- **加载遮罩**: 可配置的启动加载页与动画
-- **侧栏系统**: 可配置的资料、公告、目录、分类、标签、统计等侧栏挂件
-- **站点统计**: 集成 Umami 访客统计
-- **评论系统**: 集成 Waline、Twikoo 评论服务
-- **音乐播放器**: 支持 Meting API 或本地歌单
-- **看板娘控件**: 可交互的 Live2D 角色
+首页封面默认使用 `object-fit: cover`，会根据卡片尺寸裁切。可以设置焦点：
 
-### 视觉特效
-- **平滑过渡动画**: 精心设计的页面组件过渡动画
-- **自定义主题色**: 可实时调整的个性化配色方案
-- **动态壁纸系统**: 拥有多种显示模式的轮播壁纸
-- **动态粒子系统**: 可高度自定义的动画粒子特效
-- **自定义字体**: 支持 CSS 链接或本地字体文件
+```yaml
+coverPosition: "18% center"
+```
 
-### 兼容适配
-- **响应式设计**: 支持桌面端、移动端无缝切换
-- **多语言能力**: 3 种 UI 语言 (中/英/日) 与 12+ 种页面翻译
-- **多平台部署**: 适配 Cloudflare、Netlify、Vercel、EdgeOne 等静态托管平台
-- **Docker 支持**: 即用型 Docker 和 docker-compose 配置
+开发记录文章使用这个设置保留名片站左侧头像和名称；正文里的完整截图不受影响。`coverInContent: false` 时，如需在正文展示截图，应另外插入 Markdown 图片。
 
+文章元数据的标签支持换行，避免长标签伸入封面区域。分类、标签、目录、搜索和订阅由构建生成，无需逐项手动添加。
 
-## 💻 调试
+## 壁纸、相册与推荐
 
-### 0. Fork 仓库
-   点击右上角的 `Fork` 按钮，将仓库 Fork 到自己的 GitHub 账户下
+### 四季壁纸
 
-### 1. 克隆仓库
-   点击 `Code` -> `Open with GitHub Desktop`，或者执行 `git clone <仓库地址>` (需要安装 Git)
+在 `twilight.config.yaml` 的 `site.wallpaper` 中配置：
 
-### 2. 安装依赖
-   在项目目录下执行以下命令：
-   ```bash
-   # 安装 pnpm 如果未安装
-   npm install -g pnpm
-   # 安装项目依赖
-   pnpm install
-   ```
+- `src.desktop`、`src.mobile`：桌面和手机图片列表。
+- `carousel.interval`：轮播间隔，当前为 3.6 秒。
+- `mode`：默认 `banner`；也支持 `fullscreen` 与 `none`。
 
-### 3. 配置博客
-   - 在 `twilight.config.yaml` 中 [自定义博客设置](https://docs.twilight.spr-aachen.com/config/core)
-   - 在 `src/content` 中 [管理站点内容](https://docs.twilight.spr-aachen.com/config/content)
+当前使用 `wallpaper-spring.jpg`、`wallpaper-summer.jpg`、`wallpaper-autumn.jpg`、`wallpaper-winter.jpg`，均位于 `public/assets/images/`。
 
-### 4. 本地调试
-   在项目目录下执行以下命令：
-   ```bash
-   pnpm dev
-   ```
+### 四季相册
 
+编辑 `src/content/albums/seasons.json`。`cover` 是相册封面，`photos` 是照片数组，每张照片可以填写 `src`、`alt`、`title`、`width` 与 `height`。当前为两列网格、四张照片，地址为 `/albums/seasons/`。
 
-## 🚀 部署
+替换壁纸不会自动改写相册 JSON；如果更换了文件名，两处引用都需要同步。
 
-将博客部署到任意静态托管平台
+### 网页推荐与友链
 
-PS: 经用户反馈，目前包括 ESA 在内的部分平台无法正常使用后台功能，**请尽量选择 GitHub, Cloudflare, Netify, Vercel 等[推荐部署的平台](https://docs.twilight.spr-aachen.com/guide/deployment/)**
+- 推荐分组和网站信息：`src/content/recommendations.json`，页面支持搜索。
+- 友链页面文字：`src/content/friends.md`；友链条目：`src/content/friends/` 下的 JSON。
+- 关于页面：`src/content/about.md`。
+- 导航文字和入口：`twilight.config.yaml` 的 `navbar.links`。
 
+## 头像、图标与侧栏
 
-## ⚡ 命令
+个人资料与社交链接位于 `twilight.config.yaml` 的 `profile`。头像当前使用本地花朵照片，社交入口包括 GitHub、X、Telegram 和邮箱。
 
-| 指令                       | 说明                      |
-|:---------------------------|:-------------------------|
-| ~~`pnpm lint`~~            | ~~检查并修复代码问题~~     |
-| ~~`pnpm format`~~          | ~~使用 Biome 格式化代码~~  |
-| `pnpm check`               | 运行 Astro 错误检查       |
-| `pnpm dev`                 | 启动本地服务器             |
-| `pnpm build`               | 构建站点到 `./dist/`      |
-| `pnpm preview`             | 预览本地构建结果           |
-| `pnpm astro ...`           | 运行 `Astro CLI` 命令     |
-| `pnpm new-post <filename>` | 创建新博客文章             |
+浏览器图标在 `public/favicon-avatar.svg`。它嵌入头像图像，并通过圆形 SVG 裁切保持四角透明。**仅替换头像 JPG 不会更新已嵌入的图标**，需要同步更新 SVG。
 
+`sidebar.components` 当前配置为：
 
-## 🙏 致谢
+| 区域 | 从上到下 |
+| --- | --- |
+| 左侧 | 资料、公告、日历、分类 |
+| 右侧 | 标签、文章与相册目录、统计 |
 
-- 原型 - [Fuwari](https://github.com/saicaca/fuwari)
-- 灵感 - [Yukina](https://github.com/WhitePaper233/yukina) & [Mizuki](https://github.com/matsuzaka-yuki/Mizuki)
-- 翻译 - [translate](https://gitee.com/mail_osc/translate)
+平板将侧栏合并到左侧，手机将侧栏安排在正文之后。手机规则使用 `width < 768px`，与平板起始断点分开，避免恰好 768px 时侧栏与正文重叠。
+
+三个统计图由 `src/components/sidebar/statistics.svelte` 绘制：
+
+- 发文趋势：按年、最近 12 个月或最近 30 天汇总原始发布日期。
+- 分类分布：少于三项使用条形图，三项及以上使用雷达图。
+- 标签分布：显示使用最多的八个标签，长标签分行展示。
+
+它们使用有效文章数据，不是访问量统计。预设分类在 `post.categories` 中维护，暂无文章时也会显示 0 篇。右侧目录根节点由 `src/utils/directory.ts` 限定为文章和相册。
+
+## 模板示例的处理
+
+原模板示例通过加载规则退出站点，原文件仍在仓库中。排除位置如下：
+
+| 内容 | 加载或排除规则 |
+| --- | --- |
+| 示例文章 | `src/content.config.ts` |
+| 示例相册 | `src/utils/albums.ts` |
+| 示例日记 | `src/utils/diary.ts` |
+| 示例项目 | `src/utils/projects.ts` |
+| 示例技能 | `src/utils/skills.ts` |
+| 示例历程 | `src/utils/timeline.ts` |
+| 示例友链 | `src/utils/friends.ts` |
+
+不要直接复用被排除的示例文件名作为新文章，例如 `videos.md`、`mermaids.md`、`draft.md` 或原有 `guide/` 示例。新内容使用新的文件名。
+
+旧示例文章和相册的跳转规则在 `public/_redirects`；它由 Cloudflare Pages 使用。其他托管平台需要按各自规则处理跳转。
+
+## 构建与预览
+
+常规内容预览使用 `pnpm dev`。上线前可运行 `pnpm check`。
+
+`pnpm build` 依次执行图标生成、Astro 构建与 Pagefind 索引生成。适配器由 `astro.config.mjs` 根据环境选择：GitHub Actions 使用静态构建，Cloudflare 使用 Cloudflare 适配器；未命中平台环境时会回退到 Vercel 适配器。因此本地验证本站 Cloudflare 版本时，应显式设置环境。
+
+PowerShell：
+
+```powershell
+$env:CF_PAGES = "1"
+pnpm build
+$env:CF_PAGES = $null
+```
+
+Bash：
+
+```bash
+CF_PAGES=1 pnpm build
+```
+
+只检查生成的静态页面时，可以启动静态服务器：
+
+```bash
+python -m http.server 4321 --bind 127.0.0.1 --directory dist
+```
+
+访问 `http://127.0.0.1:4321/`，按 `Ctrl+C` 停止。这种方式不运行 Cloudflare Functions。`pnpm preview` 只是调用 `astro preview`，是否适用取决于所选适配器。
+
+## 发布与排查
+
+提交并推送至 `main` 后，分别检查 GitHub Actions 与 Cloudflare Pages 的构建结果。成功后，再访问主域名确认文章、分类、图片和页面交互。
+
+### GitHub Pages 出现 Jekyll 日志
+
+如果日志中出现 `github-pages`、`jekyll`、`jekyll-theme-primer` 等信息，检查仓库 **Settings → Pages → Source** 是否误选了分支发布。本站应选择 **GitHub Actions**，使用 `.github/workflows/deploy.yml` 构建 Astro。
+
+### 文章没有出现
+
+依次检查：文件是否在 `src/content/posts/`，扩展名是否为 `.md` 或 `.mdx`，是否设置了 `draft: true`，是否复用了被排除的文件名，以及最新提交的构建是否成功。
+
+### 分类或标签不对
+
+检查文章的 `category` 与 `tags`，不要只修改文件夹名称。当前分类名是 `Vibe Coding` 与 `游戏`。
+
+### 图片不显示或封面裁切不合适
+
+确认文件已提交、路径大小写一致，且以 `/assets/images/` 引用 `public/assets/images/` 下的文件。裁切问题调整 `coverPosition`；正文需要完整图片时单独插入 Markdown 图片。
+
+### 首页统计与访客统计的区别
+
+右侧三个图表统计文章内容。Umami 访客分析当前未启用；要开启，需要单独配置服务和凭据。评论、CMS OAuth、看板娘也尚未启用，保留的模板代码不代表服务已经配置完成。
+
+播放器当前启用，使用 Meting 外部歌单；字体、页面翻译和音乐接口依赖外部服务，网络状态可能影响加载。自动播放是否生效还受浏览器策略影响。
