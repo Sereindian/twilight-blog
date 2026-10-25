@@ -53,13 +53,16 @@ site:
         src:
             # 桌面壁纸图片 (相对于 /public 目录; 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播)
             desktop:
-                - "/assets/images/desktopWallpaper_1.jpg"
-                - "/assets/images/desktopWallpaper_2.jpg"
-                - "/assets/images/desktopWallpaper_3.jpg"
+                - "/assets/images/wallpaper-spring.jpg"
+                - "/assets/images/wallpaper-summer.jpg"
+                - "/assets/images/wallpaper-autumn.jpg"
+                - "/assets/images/wallpaper-winter.jpg"
             # 移动壁纸图片 (相对于 /public 目录; 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播)
             mobile:
-                - "/assets/images/mobileWallpaper_1.jpg"
-                - "/assets/images/mobileWallpaper_2.jpg"
+                - "/assets/images/wallpaper-spring.jpg"
+                - "/assets/images/wallpaper-summer.jpg"
+                - "/assets/images/wallpaper-autumn.jpg"
+                - "/assets/images/wallpaper-winter.jpg"
         # 壁纸位置 ('top' | 'center' | 'bottom')
         position: "center"
         # 轮播配置 (fullscreen 和 banner 模式共享)
@@ -271,6 +274,15 @@ profile:
             icon: "fa6-brands:github"
             # 链接
             url: "https://github.com/Sereindian"
+        - name: "X · _Allchemilla_"
+          icon: "fa6-brands:x-twitter"
+          url: "https://x.com/_Allchemilla_"
+        - name: "Telegram · @Sereindian"
+          icon: "fa6-brands:telegram"
+          url: "https://t.me/Sereindian"
+        - name: "邮箱 · hugaohuang@gmail.com"
+          icon: "fa6-solid:envelope"
+          url: "mailto:hugaohuang@gmail.com"
 
 # 公告配置
 announcement:

@@ -27,3 +27,11 @@
 不要将 `main / (root)` 直接交给 Jekyll 构建；Jekyll 会把 `.astro` 文件中的代码误当成 YAML front matter，导致 `pages build and deployment` 报错。
 
 当前头像使用 `public/assets/images/EEDB3A0FE22E42DF15C35AB4FFEC399B.jpg`（上传的黄色花朵照片）。
+
+## 壁纸与联系方式
+
+- 桌面和手机的壁纸均按春、夏、秋、冬顺序轮播，图片位于 `public/assets/images/wallpaper-*.jpg`；原始上传文件保持不变。
+- 左侧头像下方显示 GitHub、X、Telegram 和邮箱图标，悬停可查看联系方式。
+- X：`https://x.com/_Allchemilla_`，用户名的开头和结尾各有一个下划线。
+- Telegram：`https://t.me/Sereindian`，点击可打开 Telegram 个人主页。
+- 邮箱：`mailto:hugaohuang@gmail.com`，点击唤起邮件客户端。
