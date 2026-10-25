@@ -73,21 +73,24 @@
     {@const currentPathStr = path ? `${path}/${node.name}` : node.name}
     <div class="flex flex-col">
         {#if node.type === "folder"}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
             <div 
-                class="min-w-0 flex items-center px-2 py-1.5 my-0.5 rounded-md cursor-pointer transition-colors duration-300 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) {expandedFolders[currentPathStr] ? 'font-medium text-90' : 'font-medium text-75'}" 
-                onclick={(e) => toggleFolder(currentPathStr, e)}
+                class="min-w-0 flex items-center px-2 py-1.5 my-0.5 rounded-md transition-colors duration-300 hover:text-(--primary) hover:bg-(--btn-plain-bg-hover) {expandedFolders[currentPathStr] ? 'font-medium text-90' : 'font-medium text-75'}"
             >
                 <svg class="w-4 h-4 mr-1.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
                 </svg>
-                <span class="overflow-hidden text-ellipsis whitespace-nowrap flex-1">{node.name}</span>
-                <div class="flex items-center justify-center ml-1.5 w-4 h-4 transition-transform duration-300 {expandedFolders[currentPathStr] ? 'rotate-90' : ''}">
+                {#if node.url}
+                    <a href={node.url} class="overflow-hidden text-ellipsis whitespace-nowrap flex-1 py-1">{node.name}</a>
+                {:else}
+                    <button type="button" class="overflow-hidden text-ellipsis whitespace-nowrap flex-1 py-1 text-left" onclick={(e) => toggleFolder(currentPathStr, e)}>{node.name}</button>
+                {/if}
+                {#if node.children && node.children.length > 0}
+                <button type="button" aria-label={`展开或收起${node.name}`} aria-expanded={!!expandedFolders[currentPathStr]} onclick={(e) => toggleFolder(currentPathStr, e)} class="flex items-center justify-center ml-1.5 w-8 h-8 transition-transform duration-300 {expandedFolders[currentPathStr] ? 'rotate-90' : ''}">
                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
-                </div>
+                </button>
+                {/if}
             </div>
             
             {#if expandedFolders[currentPathStr] && node.children}

@@ -25,5 +25,5 @@ const len = page.data.length;
 
 <GridLayout>
     <PostPage page={page}></PostPage>
-    <Pagination class="mx-auto onload-animation-up" page={page} style={`animation-delay: ${(len)*50}ms`}></Pagination>
+    {page.lastPage > 1 && <Pagination class="mx-auto onload-animation-up" page={page} style={`animation-delay: ${(len)*50}ms`}></Pagination>}
 </GridLayout>

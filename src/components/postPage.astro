@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 
 import PostCard from "@components/post/postCard.astro";
+import { url } from "@utils/url";
 
 
 const { page } = Astro.props;
@@ -11,6 +12,13 @@ const interval = 30;
 ---
 
 <div class="transition flex flex-col gap-3 py-1 md:py-0 md:gap-4 mb-4">
+    {page.data.length === 0 && (
+        <section class="card-base px-6 py-12 md:px-9 text-75" data-pagefind-body>
+            <h2 class="text-2xl font-bold text-90 mb-3">还没有发布文章</h2>
+            <p class="leading-7 mb-6">这里将记录 Vibe Coding 与游戏。先去相册看看收藏的四季壁纸吧。</p>
+            <a href={url('/albums/')} class="btn-regular inline-flex rounded-lg px-4 h-11 font-medium">浏览相册</a>
+        </section>
+    )}
     {page.data.map((entry: CollectionEntry<"posts">) => (
         <PostCard
             entry={entry}

@@ -365,6 +365,8 @@ export type CommentProvider = "waline" |"twikoo";
 
 // 文章配置
 export type PostConfig = {
+    // 即使暂无文章也显示的分类
+    categories?: string[];
     // 文章卡片配置
     card: {
         // 封面配置

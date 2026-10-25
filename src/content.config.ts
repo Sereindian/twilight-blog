@@ -22,7 +22,14 @@ const tagsSchema = z.preprocess((arg) => {
 }, z.array(z.string()).optional().default([]));
 
 const postsCollection = defineCollection({
-    loader: glob({ pattern: '**/[^_]*.{md,mdx}', base: "./src/content/posts" }),
+    loader: glob({
+        pattern: [
+            '**/[^_]*.{md,mdx}',
+            '!videos.md', '!mermaids.md', '!encryption.md', '!draft.md', '!copy-protection.md',
+            '!guide/Getting Started.md', '!guide/Advanced Customization.md',
+        ],
+        base: "./src/content/posts",
+    }),
     schema: z.object({
         title: z.coerce.string(),
         directoryTitle: z.coerce.string().optional().default("").transform(s => s.trim()),

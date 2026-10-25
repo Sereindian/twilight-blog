@@ -6,6 +6,7 @@ import { skillsData } from "./skills";
 import { timelineData } from "./timeline";
 import { i18n } from "../i18n/translation";
 import I18nKey from "../i18n/i18nKey";
+import { getPostUrl, url } from "./url";
 
 
 export interface DirectoryNode {
@@ -25,7 +26,10 @@ export async function getDirectoryTree(): Promise<DirectoryNode[]> {
         timeline: i18n(I18nKey.timeline),
     };
 
-    const tree: Record<string, any> = {};
+    const tree: Record<string, any> = {
+        [rootMap.posts]: { name: rootMap.posts, type: 'folder', url: url('/archive/'), children: {} },
+        [rootMap.albums]: { name: rootMap.albums, type: 'folder', url: url('/albums/'), children: {} },
+    };
 
     function addNode(paths: string[], name: string, url: string) {
         let current = tree;
@@ -44,7 +48,7 @@ export async function getDirectoryTree(): Promise<DirectoryNode[]> {
         const parts = post.id.split('/');
         const fileName = parts.pop()!;
         const paths = [rootMap.posts, ...parts];
-        addNode(paths, post.data.directoryTitle || post.data.title || fileName, `/posts/${post.id}/`);
+        addNode(paths, post.data.directoryTitle || post.data.title || fileName, getPostUrl(post));
     }
 
     for (const album of sortedAlbums) {
@@ -52,7 +56,7 @@ export async function getDirectoryTree(): Promise<DirectoryNode[]> {
         const basePathParts = album.basePath?.split('/') || [];
         if (basePathParts[0] === 'content') basePathParts.shift();
         if (basePathParts[0] === 'albums') basePathParts[0] = rootMap.albums;
-        addNode(basePathParts, album.title || album.id, `/albums/${album.id}/`);
+        addNode(basePathParts, album.title || album.id, url(`/albums/${album.id}/`));
     }
 
     for (const moment of sortedMoments) {
@@ -89,6 +93,7 @@ export async function getDirectoryTree(): Promise<DirectoryNode[]> {
                 return {
                     name: node.name,
                     type: 'folder',
+                    url: node.url,
                     children: toArray(node.children)
                 } as DirectoryNode;
             }
@@ -110,5 +115,5 @@ export async function getDirectoryTree(): Promise<DirectoryNode[]> {
         return arr;
     }
 
-    return toArray(tree);
+    return [rootMap.posts, rootMap.albums].map(name => toArray({ [name]: tree[name] })[0]);
 }

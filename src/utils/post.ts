@@ -8,6 +8,7 @@ import { parseTags, type Tag } from "@utils/tag";
 import { getCategoryUrl } from "@utils/url";
 import { i18n } from "@i18n/translation";
 import I18nKey from "@i18n/i18nKey";
+import { postConfig } from "@/config";
 
 
 type ResolvedPost = CollectionEntry<"posts"> & {
@@ -141,7 +142,9 @@ export async function getCategoryList(): Promise<Category[]> {
     const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
         return import.meta.env.PROD ? data.draft !== true : true;
     });
-    const count: { [key: string]: number } = {};
+    const count: { [key: string]: number } = Object.fromEntries(
+        (postConfig.categories ?? []).map(name => [name, 0]),
+    );
     allBlogPosts.forEach((post: { data: { category: string | string[] | null } }) => {
         const categoryParts = getCategoryPathParts(post.data.category);
         if (!categoryParts) {
@@ -182,6 +185,9 @@ export async function getCategoryTree(): Promise<CategoryTreeItem[]> {
     };
 
     const root = new Map<string, CategoryTreeInternal>();
+    for (const name of postConfig.categories ?? []) {
+        root.set(name, { name, count: 0, path: [name], children: new Map() });
+    }
     const uncategorizedKey = i18n(I18nKey.uncategorized);
 
     for (const post of allBlogPosts) {

@@ -1,20 +1,8 @@
 ---
-title: Friends
+title: "友链"
+description: "朋友们的小站"
 ---
 
-## How to Apply
+目前还没有添加友链。
 
-Please send your website information to: xxx@xxx.com
-
-Email Subject:
-```
-Request to Add Friend
-```
-
-Email Content (Template):
-```
-Site Name: [Your Site Name]
-Site Desc: [Your Site Description]
-Site Link: [Your Site Link]
-Avatar Link: [Your Avatar Link]
-```
+如果希望交换友链，可以通过 [Telegram](https://t.me/Sereindian) 或 [邮件](mailto:hugaohuang@gmail.com) 联系我。

@@ -1,0 +1,16 @@
+{
+    "title": "四季壁纸",
+    "description": "春樱、夏雨、秋叶与冬雪，收藏喜欢的四季风景。",
+    "cover": "/assets/images/wallpaper-spring.jpg",
+    "date": "2026-10-25",
+    "tags": ["壁纸", "四季"],
+    "layout": "grid",
+    "columns": 2,
+    "visible": true,
+    "photos": [
+        { "src": "/assets/images/wallpaper-spring.jpg", "alt": "春日樱花与和服少女", "title": "春 · 樱花", "width": 2211, "height": 1050 },
+        { "src": "/assets/images/wallpaper-summer.jpg", "alt": "夏日绣球花与和服少女", "title": "夏 · 绣球", "width": 2211, "height": 1050 },
+        { "src": "/assets/images/wallpaper-autumn.jpg", "alt": "秋日红叶与和服少女", "title": "秋 · 红叶", "width": 2211, "height": 1050 },
+        { "src": "/assets/images/wallpaper-winter.jpg", "alt": "冬日落雪与和服少女", "title": "冬 · 落雪", "width": 2211, "height": 1050 }
+    ]
+}

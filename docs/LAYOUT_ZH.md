@@ -1,37 +1,51 @@
-# 博客布局与网页推荐
+# 博客内容与布局
 
-本次排版参考 https://zeyun.org/，沿用 Twilight 的横幅、波浪和主题色。
+## 页面布局
 
-- 桌面左侧：头像、公告、日历、分类和标签；文章与相册页另显示站内目录。
-- 中间：文章列表或当前页面内容；列表封面在卡片宽度达到 512px 时放在右侧。
-- 桌面右侧：页面目录；首页和归档页显示文章统计。
-- 手机：先显示正文，侧栏内容收在正文之后，沿用主题的响应式布局。
-- 默认使用浅色，导航栏仍可切换深色或跟随系统。
-- `/recommendations/` 是网页推荐；旧 `/exhibition/` 地址跳转到新页面。
+- 左侧：花朵头像、社交入口、公告、日历和文章分类；有文章标签时显示标签。
+- 分类预设为 Vibe Coding、游戏；没有文章时显示 0 篇。配置位置：twilight.config.yaml 的 post.categories。
+- 右侧：仅保留目录，根节点只有文章与相册。点击名称进入列表，点击箭头展开子项。
+- 首页没有文章时显示空状态与相册入口。发布新文章后自动显示文章列表。
+- 手机先显示正文，再显示侧栏内容；默认浅色，保留深色与壁纸切换功能。
 
-## 修改内容
+## 发布文章
 
-- 导航、侧栏顺序、公告、头像路径：根目录 `twilight.config.yaml`。
-- 网站推荐分类与链接：`src/content/recommendations.json`。
-- 推荐页面排版：`src/pages/recommendations.astro`。
-- 日历按 `site.timeZone` 在浏览器更新日期；不需要每天重新部署。
+在 src/content/posts/ 新建 Markdown 文件，并填写 front matter。例如：
 
-推荐列表提供名称、说明、网址、分类关键词的即时筛选，支持无结果提示；禁用 JavaScript 时仍能浏览全部链接。
+```yaml
+---
+title: "我的 Vibe Coding 记录"
+published: 2026-10-25
+category: "Vibe Coding"
+tags: []
+draft: false
+---
+```
 
-提交到 `main` 后，现有 Cloudflare Pages Git 集成会自动构建部署。站点原有示例文章与关于页内容可后续自行替换。
+游戏文章使用 category: "游戏"。示例文件名已列入构建排除项，发布自己的文章请使用新的文件名。
 
-## GitHub Pages 构建源
+## 相册与壁纸
 
-仓库使用 Astro。GitHub 仓库的 `Settings → Pages → Build and deployment → Source` 应选择 `GitHub Actions`，由已有 `.github/workflows/deploy.yml` 构建和发布。
+- 相册数据：src/content/albums/seasons.json，包含用户上传的春、夏、秋、冬四张壁纸。
+- 相册地址：/albums/seasons/，所有相册列表：/albums/。
+- 壁纸文件：public/assets/images/wallpaper-spring.jpg、wallpaper-summer.jpg、wallpaper-autumn.jpg、wallpaper-winter.jpg。
+- 桌面与手机共享四张轮播图；原始上传文件不变。
 
-不要将 `main / (root)` 直接交给 Jekyll 构建；Jekyll 会把 `.astro` 文件中的代码误当成 YAML front matter，导致 `pages build and deployment` 报错。
+## 模板示例处理
 
-当前头像使用 `public/assets/images/EEDB3A0FE22E42DF15C35AB4FFEC399B.jpg`（上传的黄色花朵照片）。
+遵循用户的文件删除安全规则，没有批量删除文件。原模板示例通过文章 collection 和各内容 loader 的排除列表退出构建；文章、标签、分类、目录、RSS、站点地图与搜索索引均使用有效内容。
 
-## 壁纸与联系方式
+已排除：模板文章、示例相册、Twilight 项目、示例技能、示例历程、示例日记和默认友链。关于页与友链说明已替换为本站的实际信息。若需要物理删除保留的示例文件，需由用户手动执行。
 
-- 桌面和手机的壁纸均按春、夏、秋、冬顺序轮播，图片位于 `public/assets/images/wallpaper-*.jpg`；原始上传文件保持不变。
-- 左侧头像下方显示 GitHub、X、Telegram 和邮箱图标，悬停可查看联系方式。
-- X：`https://x.com/_Allchemilla_`，用户名的开头和结尾各有一个下划线。
-- Telegram：`https://t.me/Sereindian`，点击可打开 Telegram 个人主页。
-- 邮箱：`mailto:hugaohuang@gmail.com`，点击唤起邮件客户端。
+## 联系方式与推荐页
+
+- 头像与链接配置：twilight.config.yaml。
+- X：https://x.com/_Allchemilla_（开头和结尾各有一个下划线）。
+- Telegram：https://t.me/Sereindian。
+- 邮箱：mailto:hugaohuang@gmail.com。
+- 网页推荐：/recommendations/；数据：src/content/recommendations.json。
+- 旧 /exhibition/ 地址跳转到 /recommendations/。
+
+## 部署
+
+提交到 main 后，Cloudflare Pages 与 GitHub Actions 自动构建发布。GitHub 仓库 Settings → Pages → Source 应选择 GitHub Actions，避免 Jekyll 误读 Astro 源码。

@@ -122,6 +122,9 @@ let groups = $derived.by(() => {
 </script>
 
 <div>
+    {#if groups.length === 0}
+        <p class="text-50 py-8">{categories.length > 0 ? `${categories.join('、')} 分类下还没有发布文章。` : '还没有发布文章。'}</p>
+    {/if}
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-15">
