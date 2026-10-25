@@ -1,0 +1,26 @@
+[
+  {
+    "style": "Regular",
+    "weight": 400,
+    "family": "Zen Maru Gothic",
+    "glyphs": 7812,
+    "bytes": 1558372,
+    "source_sha256": "a0c0b53543e0993ae2225e629c833f3d51495ad31720694ff112ce4ce11111ef"
+  },
+  {
+    "style": "Medium",
+    "weight": 500,
+    "family": "Zen Maru Gothic Medium",
+    "glyphs": 7812,
+    "bytes": 1585068,
+    "source_sha256": "3cfdb98a13571ede17fcc769f5093a97c38b80a7b9b2ab754a26b4d822092b3b"
+  },
+  {
+    "style": "Bold",
+    "weight": 700,
+    "family": "Zen Maru Gothic",
+    "glyphs": 7812,
+    "bytes": 1616536,
+    "source_sha256": "fe24426b9c8b5523a0146a8235c8674eccf0493af354a53ec895c3596d9eb745"
+  }
+]
