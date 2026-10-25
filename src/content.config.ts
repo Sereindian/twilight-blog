@@ -37,6 +37,7 @@ const postsCollection = defineCollection({
         updated: optionalDateSchema,
         description: z.string().optional().default(""),
         cover: z.string().optional().default(""),
+        coverPosition: z.string().optional().default("center"),
         coverInContent: z.boolean().optional().default(false),
         category: categorySchema,
         tags: tagsSchema,

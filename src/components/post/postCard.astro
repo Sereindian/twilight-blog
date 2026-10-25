@@ -29,6 +29,7 @@ const {
     updated,
     description,
     cover,
+    coverPosition,
     tags,
     category,
     pinned,
@@ -99,7 +100,7 @@ const defaultCoverGradient = "linear-gradient(135deg, color-mix(in oklch, oklch(
                 </Icon>
             </div>
             {hasCover ? (
-                <ImageWrapper src={cover} basePath={imageBaseDir} alt="Cover Image of the Post"
+                <ImageWrapper src={cover} position={coverPosition} basePath={imageBaseDir} alt={`${title}：文章封面`}
                     class="w-full h-full">
                 </ImageWrapper>
             ) : (

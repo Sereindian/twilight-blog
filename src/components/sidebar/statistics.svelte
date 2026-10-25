@@ -7,7 +7,6 @@
     import { onMount } from 'svelte';
     import dayjs from 'dayjs';
 
-    import { BREAKPOINT_LG } from "@constants/breakpoints";
     import { i18n } from "@i18n/translation";
     import I18nKey from "@i18n/i18nKey";
     import Icon from "@components/common/icon.svelte";
@@ -34,7 +33,7 @@
         month: i18n(I18nKey.month),
         day: i18n(I18nKey.day),
         posts: i18n(I18nKey.posts),
-        activities: "Activities",
+        activities: "发文动态",
         categories: i18n(I18nKey.categories),
         tags: i18n(I18nKey.tags),
         statistics: i18n(I18nKey.statistics),
@@ -55,13 +54,6 @@
     let timeScale: 'year' | 'month' | 'day' = $state('year');
     let lastScale = $state<'year' | 'month' | 'day'>('year');
     let isDark = $state(false);
-    let isDesktop = $state(true);
-
-    const updateIsDesktop = () => {
-        if (typeof window !== 'undefined') {
-            isDesktop = window.innerWidth >= BREAKPOINT_LG;
-        }
-    };
 
     const getThemeColors = () => {
         const isDarkNow = document.documentElement.classList.contains('dark');
@@ -93,7 +85,7 @@
 
         // 动态导入 ECharts 及其组件，启用 Tree Shaking
         const echartsCore = await import('echarts/core');
-        const { LineChart, RadarChart } = await import('echarts/charts');
+        const { LineChart, RadarChart, BarChart } = await import('echarts/charts');
         const {
             TitleComponent,
             TooltipComponent,
@@ -106,6 +98,7 @@
         echartsCore.use([
             LineChart,
             RadarChart,
+            BarChart,
             TitleComponent,
             TooltipComponent,
             GridComponent,
@@ -124,10 +117,8 @@
         isInitialized = true;
         // 依次初始化图表
         await initActivityChart();
-        if (isDesktop) {
-            await initCategoriesChart();
-            await initTagsChart();
-        }
+        await initCategoriesChart();
+        await initTagsChart();
         isGlobalInitialized = true;
     };
 
@@ -254,8 +245,40 @@
             categoriesChart = echarts.init(categoriesContainer, isDark ? 'dark' : null, { renderer: 'svg' });
         }
 
-        const indicator = categories.map(c => ({ name: c.name, max: Math.max(...categories.map(x => x.count), 5) }));
+        const indicator = categories.map(c => ({ name: c.name, max: Math.max(...categories.map(x => x.count), 1) }));
         const data = categories.map(c => c.count);
+
+        // A radar needs at least three axes; show the actual two categories as bars.
+        if (categories.length < 3) {
+            categoriesChart.setOption({
+                backgroundColor: 'transparent',
+                textStyle: { fontFamily },
+                title: {
+                    text: labels.categories,
+                    left: 'left',
+                    textStyle: { fontFamily, fontSize: 14, color: colors.text, fontWeight: 'bold' }
+                },
+                tooltip: { trigger: 'axis', confine: true },
+                grid: { left: 4, right: 24, top: 48, bottom: 20, containLabel: true },
+                xAxis: {
+                    type: 'value', minInterval: 1,
+                    axisLabel: { color: colors.text },
+                    splitLine: { lineStyle: { color: colors.grid, type: 'dashed' } }
+                },
+                yAxis: {
+                    type: 'category', data: categories.map(c => c.name),
+                    axisLabel: { color: colors.text, fontSize: 11, width: 90, overflow: 'truncate' },
+                    axisLine: { show: false }, axisTick: { show: false }
+                },
+                series: [{
+                    type: 'bar', data, barMaxWidth: 24,
+                    itemStyle: { color: '#f59e0b', borderRadius: [0, 4, 4, 0] },
+                    label: { show: true, position: 'right', color: colors.text }
+                }]
+            });
+            isCategoriesLoading = false;
+            return;
+        }
 
         categoriesChart.setOption({
             backgroundColor: 'transparent',
@@ -311,7 +334,7 @@
         }
 
         const sortedTags = [...tags].sort((a, b) => b.count - a.count).slice(0, 8);
-        const indicator = sortedTags.map(t => ({ name: t.name, max: Math.max(...sortedTags.map(x => x.count), 5) }));
+        const indicator = sortedTags.map(t => ({ name: t.name, max: Math.max(...sortedTags.map(x => x.count), 1) }));
         const data = sortedTags.map(t => t.count);
 
         tagsChart.setOption({
@@ -332,9 +355,12 @@
             },
             radar: {
                 indicator: indicator,
-                radius: '60%',
+                radius: '42%',
                 center: ['50%', '60%'],
-                axisName: { fontFamily, color: colors.text, fontSize: 10 },
+                axisName: {
+                    fontFamily, color: colors.text, fontSize: 10, lineHeight: 12,
+                    formatter: (name: string) => name.replace(/\s+/g, '\n')
+                },
                 splitLine: { lineStyle: { color: colors.grid } },
                 splitArea: { show: false }
             },
@@ -358,8 +384,6 @@
     };
 
     onMount(() => {
-        updateIsDesktop();
-
         let visibilityObserver: IntersectionObserver;
 
         const runInit = async () => {
@@ -421,22 +445,9 @@
         }
 
         const handleResize = () => {
-            const wasDesktop = isDesktop;
-            updateIsDesktop();
-            
             heatmapChart?.resize();
-            
-            if (isDesktop) {
-                if (wasDesktop) {
-                    categoriesChart?.resize();
-                    tagsChart?.resize();
-                } else {
-                    // 从移动端切换到桌面端，需要初始化雷达图，延迟一帧确保 DOM 已更新（{#if isDesktop} 生效）
-                    setTimeout(() => {
-                        initRadarCharts();
-                    }, 0);
-                }
-            }
+            categoriesChart?.resize();
+            tagsChart?.resize();
         };
 
         const observer = new MutationObserver(() => {
@@ -445,7 +456,7 @@
                 isDark = newIsDark;
                 if (isInitialized) {
                     initActivityChart(true);
-                    if (isDesktop) initRadarCharts();
+                    initRadarCharts();
                 }
             }
         });
@@ -484,24 +495,15 @@
                     </div>
                 {/if}
                 <div class="section-header">
-                    <div class="dropdown-wrapper">
-                        <button class="time-scale-select flex items-center gap-1">
-                            {labels[timeScale]}
-                            <span class="dropdown-icon flex items-center">
-                                <Icon icon="material-symbols:keyboard-arrow-down-rounded" />
-                            </span>
-                        </button>
-                        <div class="dropdown-menu-custom">
-                            <button class="dropdown-item-custom" class:active={timeScale === 'year'} onclick={() => timeScale = 'year'}>{labels.year}</button>
-                            <button class="dropdown-item-custom" class:active={timeScale === 'month'} onclick={() => timeScale = 'month'}>{labels.month}</button>
-                            <button class="dropdown-item-custom" class:active={timeScale === 'day'} onclick={() => timeScale = 'day'}>{labels.day}</button>
-                        </div>
-                    </div>
+                    <select class="time-scale-select" aria-label="发文统计时间范围" bind:value={timeScale}>
+                        <option value="year">{labels.year}</option>
+                        <option value="month">{labels.month}</option>
+                        <option value="day">{labels.day}</option>
+                    </select>
                 </div>
-                <div bind:this={heatmapContainer} class="heatmap-container transition-opacity duration-600" class:opacity-0={isHeatmapLoading}></div>
+                <div bind:this={heatmapContainer} role="img" aria-label={`发文动态，共 ${posts.length} 篇文章`} data-stat-chart="activity" class="heatmap-container transition-opacity duration-600" class:opacity-0={isHeatmapLoading}></div>
             </div>
 
-            {#if isDesktop}
                 <div class="chart-section radar-section">
                     {#if isCategoriesLoading}
                         <div class="absolute inset-0 flex items-center justify-center z-10 bg-(--card-bg)/50 backdrop-blur-[1px]">
@@ -510,7 +512,7 @@
                             </div>
                         </div>
                     {/if}
-                    <div bind:this={categoriesContainer} class="radar-container transition-opacity duration-600" class:opacity-0={isCategoriesLoading}></div>
+                    <div bind:this={categoriesContainer} role="img" aria-label={`分类分布：${categories.map(c => `${c.name} ${c.count} 篇`).join('，')}`} data-stat-chart="categories" class="radar-container transition-opacity duration-600" class:opacity-0={isCategoriesLoading}></div>
                 </div>
 
                 <div class="chart-section radar-section">
@@ -521,9 +523,8 @@
                             </div>
                         </div>
                     {/if}
-                    <div bind:this={tagsContainer} class="radar-container transition-opacity duration-600" class:opacity-0={isTagsLoading}></div>
+                    <div bind:this={tagsContainer} role="img" aria-label="标签分布，显示使用最多的八个标签" data-stat-chart="tags" class="radar-container transition-opacity duration-600" class:opacity-0={isTagsLoading}></div>
                 </div>
-            {/if}
         </div>
     </div>
 </div>
@@ -565,59 +566,6 @@
     .time-scale-select:hover {
         opacity: 1;
         border-color: var(--primary);
-    }
-    .dropdown-wrapper {
-        position: relative;
-        display: inline-block;
-    }
-    .dropdown-wrapper:hover .dropdown-menu-custom {
-        opacity: 1;
-        visibility: visible;
-        translate: 0 0;
-    }
-    .dropdown-menu-custom {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        margin-top: 4px;
-        background: var(--card-bg);
-        border: 1px solid var(--line-color);
-        border-radius: 4px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        opacity: 0;
-        visibility: hidden;
-        translate: 0 -10px;
-        transition: all var(--transition-duration-normal);
-        z-index: 50;
-        min-width: 80px;
-        overflow: hidden;
-    }
-    .dropdown-item-custom {
-        width: 100%;
-        text-align: left;
-        padding: 6px 12px;
-        font-size: 0.7rem;
-        color: var(--btn-content);
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition: all var(--transition-duration-normal);
-    }
-    .dropdown-item-custom:hover {
-        background: var(--btn-plain-bg-hover);
-        color: var(--primary);
-    }
-    .dropdown-item-custom.active {
-        color: var(--primary);
-        font-weight: bold;
-        background: var(--btn-plain-bg-hover);
-    }
-    .dropdown-icon {
-        font-size: 0.9rem;
-        transition: rotate var(--transition-duration-normal);
-    }
-    .dropdown-wrapper:hover .dropdown-icon {
-        rotate: 180deg;
     }
     .heatmap-container {
         height: 180px;

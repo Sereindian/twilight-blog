@@ -3,6 +3,7 @@ title: "从个人主页到制作人名片：我的 Vibe Coding 开发记录"
 published: 2026-10-25
 description: "回顾制作人名片站从个人主页到响应式双栏布局的迭代，记录原生前端、自动主题、字体资源与 GitHub Pages 部署中的取舍。"
 cover: "/assets/images/producer-profile-development.png"
+coverPosition: "18% center"
 coverInContent: false
 category: "Vibe Coding"
 tags: ["Vibe Coding", "个人网站", "响应式设计", "原生 JavaScript", "GitHub Pages", "偶像大师"]

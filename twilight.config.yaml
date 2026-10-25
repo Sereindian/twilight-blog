@@ -148,7 +148,9 @@ site:
             # 动画周期 (s)
             interval: 1.5
     # favicon 配置
-    favicon: []
+    favicon:
+        - src: "/favicon-avatar.svg"
+          sizes: "any"
     # bangumi 配置
     bangumi:
         # 用户 ID
@@ -219,20 +221,19 @@ sidebar:
                     collapseThreshold: 5
                 # 目录深度
                 depth: 3
-            - # 组件 - 文章标签 (预设)
-                # 类型
-                type: "tags"
-                # 位置策略 ("top" 顶部固定 | "sticky" 粘性)
-                position: "sticky"
-                # 响应式配置
-                responsive:
-                    # 折叠阈值
-                    collapseThreshold: 20
         # 右侧侧边栏
         right:
-            - # 右侧只显示文章与相册目录
+            - # 标签置于右侧顶部
+                type: "tags"
+                position: "top"
+                responsive:
+                    collapseThreshold: 20
+            - # 文章与相册目录
                 type: "directory"
-                position: "sticky"
+                position: "top"
+            - # 发文动态、分类分布、标签分布
+                type: "statistics"
+                position: "top"
 
 # 资料配置
 profile:
